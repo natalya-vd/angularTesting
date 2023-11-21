@@ -14,6 +14,6 @@ describe('First Test', () => {
     testVariable.a = true
 
     // Утверждение
-    expect(testVariable.a).toBe(false)
+    expect(testVariable.a).toBe(true)
   })
 })
