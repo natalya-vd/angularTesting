@@ -1,12 +1,17 @@
-import { LoggerService } from "../logger/logger.service"
 import { CalculatorService } from "./calculator.service"
 
 describe('CalculatorService', () => {
-  it('should add two numbers', () => {
-    const mockLoggerService = jasmine.createSpyObj('LoggerService', ['log'])  // Создаем объект-шпион
+  let mockLoggerService: any
+  let calculator: CalculatorService
+
+  beforeEach(() => {
+    mockLoggerService = jasmine.createSpyObj('LoggerService', ['log'])  // Создаем объект-шпион
     // spyOn(loggerService, 'log') // Следит за методом, но метод не вызывается в CalculatorService
 
-    const calculator = new CalculatorService(mockLoggerService)
+    calculator = new CalculatorService(mockLoggerService)
+  })
+
+  it('should add two numbers', () => {
     const res = calculator.add(2, 2)
 
     expect(res).toBe(4)
@@ -14,9 +19,6 @@ describe('CalculatorService', () => {
   })
 
   it('should subtract two numbers', () => {
-    const mockLoggerService = jasmine.createSpyObj('LoggerService', ['log'])
-
-    const calculator = new CalculatorService(mockLoggerService)
     const res = calculator.subtract(2, 2)
 
     expect(res).toBe(0)
