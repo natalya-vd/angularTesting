@@ -1,12 +1,22 @@
 import { of } from "rxjs"
+import { TestBed } from "@angular/core/testing"
 
 import { Post } from "src/app/models/post"
 import { PostsComponent } from "./posts.component"
+import { PostService } from "src/app/services/post/post.service"
+
+class MockPostService {
+  getPosts() {}
+
+  deletePost(post: Post) {
+    return of(true)
+  }
+}
 
 describe('PostsComponent', () => {
   let posts: Post[]
   let component: PostsComponent
-  let mockPostService: any
+  let postService: any
 
   beforeEach(() => {
     posts = [
@@ -27,14 +37,19 @@ describe('PostsComponent', () => {
       },
     ]
 
-    mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost'])
+    TestBed.configureTestingModule({
+      providers: [
+        PostsComponent,
+        {provide: PostService, useClass: MockPostService}
+      ]
+    })
 
-    component = new PostsComponent(mockPostService)
+    component = TestBed.inject(PostsComponent)
+    postService = TestBed.inject(PostService)
   })
 
   describe('deletePost()', () => {
     beforeEach(() => {
-      mockPostService.deletePost.and.returnValue(of(true))
       component.posts = posts
     })
 
@@ -53,9 +68,10 @@ describe('PostsComponent', () => {
     })
 
     it('should call the delete method in PostsService once', () => {
+      spyOn(postService, 'deletePost').and.callThrough()
       component.deletePost(posts[1])
 
-      expect(mockPostService.deletePost).toHaveBeenCalledTimes(1)
+      expect(postService.deletePost).toHaveBeenCalledTimes(1)
     })
   })
 })
