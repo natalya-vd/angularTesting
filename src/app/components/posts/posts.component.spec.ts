@@ -1,6 +1,6 @@
 import { of } from "rxjs"
 import { ComponentFixture, TestBed } from "@angular/core/testing"
-import { NO_ERRORS_SCHEMA } from "@angular/core"
+import { Component, Input, NO_ERRORS_SCHEMA } from "@angular/core"
 
 import { Post } from "src/app/models/post"
 import { PostsComponent } from "./posts.component"
@@ -19,6 +19,14 @@ describe('PostsComponent', () => {
   let component: PostsComponent
   let fixture: ComponentFixture<PostsComponent>
   let mockPostService: any
+
+  @Component({
+    selector: 'app-post',
+    template: '<div></div>'
+  })
+  class FakePostComponent {
+    @Input() post!: Post
+  }
 
   beforeEach(() => {
     posts = [
@@ -42,11 +50,10 @@ describe('PostsComponent', () => {
     mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost'])
 
     TestBed.configureTestingModule({
-      declarations: [PostsComponent],
+      declarations: [PostsComponent, FakePostComponent],
       providers: [
         {provide: PostService, useValue: mockPostService}
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
+      ]
     })
 
     fixture = TestBed.createComponent(PostsComponent)
