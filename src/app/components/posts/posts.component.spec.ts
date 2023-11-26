@@ -1,10 +1,11 @@
 import { of } from "rxjs"
 import { ComponentFixture, TestBed } from "@angular/core/testing"
-import { Component, Input, NO_ERRORS_SCHEMA } from "@angular/core"
+import { Component, DebugElement, Input, NO_ERRORS_SCHEMA } from "@angular/core"
 
 import { Post } from "src/app/models/post"
 import { PostsComponent } from "./posts.component"
 import { PostService } from "src/app/services/post/post.service"
+import { By } from "@angular/platform-browser"
 
 // class MockPostService {
 //   getPosts() {}
@@ -65,6 +66,16 @@ describe('PostsComponent', () => {
     fixture.detectChanges()
 
     expect(component.posts.length).toBe(3)
+  })
+
+  it('should create one post child element for each post', () => {
+    mockPostService.getPosts.and.returnValue(of(posts))
+    fixture.detectChanges()
+
+    const debugElement: DebugElement = fixture.debugElement
+    const postElement = debugElement.queryAll(By.css('.posts'))
+
+    expect(postElement.length).toBe(posts.length)
   })
 
   describe('deletePost()', () => {
