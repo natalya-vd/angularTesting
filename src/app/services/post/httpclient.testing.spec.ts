@@ -26,9 +26,33 @@ describe('HttpClient', () => {
     httpClient.get<Data>(testUrl).subscribe((data) => {
       // expect(data).toEqual(testData)
     })
+
+    // expectOne - проверяем, что на url '/data' был сделан один запрос
     const request = httpTestingController.expectOne('/data')
+    // Добавить тестовые данные
     request.flush(testData)
 
     expect(request.request.method).toBe('GET')
+  })
+
+  it('should test multiple requests', () => {
+    const testData: Data[] = [{name: 'name 1'}, {name: 'name 2'}]
+
+    httpClient.get<Data[]>(testUrl).subscribe(data => {
+      expect(data.length).toEqual(0)
+    })
+    httpClient.get<Data[]>(testUrl).subscribe(data => {
+      expect(data).toEqual([testData[0]])
+    })
+    httpClient.get<Data[]>(testUrl).subscribe(data => {
+      expect(data).toEqual(testData)
+    })
+
+    const requests = httpTestingController.match(testUrl)
+    requests[0].flush([])
+    requests[1].flush([testData[0]])
+    requests[2].flush(testData)
+
+    expect(requests.length).toBe(3)
   })
 })
