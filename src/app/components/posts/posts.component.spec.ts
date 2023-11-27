@@ -127,5 +127,20 @@ describe('PostsComponent', () => {
 
       expect(mockPostService.deletePost).toHaveBeenCalledTimes(1)
     })
+
+    it('should call delete method when postComponent button is clicked', () => {
+      spyOn(component, 'deletePost')
+      mockPostService.getPosts.and.returnValue(of(posts))
+      //ngOnInit()
+      fixture.detectChanges()
+
+      const postComponentDes = fixture.debugElement.queryAll(By.directive(PostComponent))
+      for(let i = 0; i < postComponentDes.length; i++) {
+        postComponentDes[i].query(By.css('button')).triggerEventHandler('click', {preventDefault: () => {}})
+
+        expect(component.deletePost).toHaveBeenCalledWith(posts[i])
+      }
+
+    })
   })
 })
