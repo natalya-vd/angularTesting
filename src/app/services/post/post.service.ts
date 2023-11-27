@@ -22,4 +22,8 @@ export class PostService {
   deletePost(post: Post) {
     return this.http.delete(`${this.urlPosts}/${post.id}`)
   }
+
+  updatePost(post: Post) {
+    return this.http.put(`${this.urlPosts}/${post.id}`, post)
+  }
 }
