@@ -15,6 +15,10 @@ export class PostService {
     return this.http.get<Post[]>(this.urlPosts)
   }
 
+  getPost(postId: number) {
+    return this.http.get<Post>(`${this.urlPosts}/${postId}`)
+  }
+
   deletePost(post: Post) {
     return this.http.delete(`${this.urlPosts}/${post.id}`)
   }

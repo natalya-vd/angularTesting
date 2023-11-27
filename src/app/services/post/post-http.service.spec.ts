@@ -38,6 +38,11 @@ describe('PostService (HttpClientTestingModule)', () => {
     httpTestingController = TestBed.inject(HttpTestingController)
   })
 
+  afterEach(() => {
+    // Проверяет, что запрос идет только на урл  указанный в httpTestingController.expectOne
+    httpTestingController.verify()
+  })
+
   describe('getPosts()', () => {
     it('should get posts when getPosts() is called', (done: DoneFn) => {
       postService.getPosts().subscribe((data) => {
@@ -46,6 +51,16 @@ describe('PostService (HttpClientTestingModule)', () => {
       })
       const request = httpTestingController.expectOne(urlPosts)
       request.flush(posts)
+
+      expect(request.request.method).toBe('GET')
+    })
+  })
+
+  describe('getPost()', () => {
+    it('should return single post when getPost is called with postId', () => {
+      postService.getPost(1).subscribe()
+
+      const request = httpTestingController.expectOne(`${urlPosts}/1`)
 
       expect(request.request.method).toBe('GET')
     })
